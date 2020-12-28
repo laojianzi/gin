@@ -60,14 +60,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          PR_OR_COMPARE="$(if [ "${{ github.event.pull_request }}" != "" ]; then echo "${{ github.event.pull_request.diff_url }}/files"; else echo "${{ github.event.compare }}"; fi)"
+          PR_OR_COMPARE="$(if [ "${{ github.event.pull_request }}" != "" ]; then echo "${{ github.event.pull_request.html_url }}/files"; else echo "${{ github.event.compare }}"; fi)"
           echo $PR_OR_COMPARE
+          curl -d message="GitHub Actions [$GITHUB_REPOSITORY]($PR_OR_COMPARE) ($GITHUB_REF) [normal]($GITHUB_API_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID) ($GITHUB_RUN_NUMBER)" -d level=error https://webhooks.gitter.im/e/0d218e23e366f63de920
   gitter-success:
     needs: test
     if: success()
     runs-on: ubuntu-latest
     steps:
       - run: |
-          $(if [ "${{ github.event.pull_request }}" != "" ]; then export PR_OR_COMPARE="${{ github.event.pull_request.diff_url }}/files"; else export PR_OR_COMPARE="${{ github.event.compare }}"; fi)
+          $(if [ "${{ github.event.pull_request }}" != "" ]; then export PR_OR_COMPARE="${{ github.event.pull_request.html_url }}/files"; else export PR_OR_COMPARE="${{ github.event.compare }}"; fi)
           echo $PR_OR_COMPARE
           curl -d message="GitHub Actions [$GITHUB_REPOSITORY]($PR_OR_COMPARE) ($GITHUB_REF) [normal]($GITHUB_API_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID) ($GITHUB_RUN_NUMBER)" https://webhooks.gitter.im/e/0d218e23e366f63de920
