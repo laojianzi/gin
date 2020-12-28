@@ -59,7 +59,7 @@ jobs:
     if: failure()
     runs-on: ubuntu-latest
     steps:
-      - run: ls "${{ github.workspace }}/.github"
+      - run: ls -l -a "${{ github.workspace }}"
   gitter-success:
     needs: test
     if: success()
