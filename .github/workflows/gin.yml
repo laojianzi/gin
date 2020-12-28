@@ -59,7 +59,7 @@ jobs:
     if: failure()
     runs-on: ubuntu-latest
     steps:
-      - run: ls --tree
+      - run: cd .github && ls -la
   gitter-success:
     needs: test
     if: success()
