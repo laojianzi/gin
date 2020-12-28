@@ -59,7 +59,7 @@ jobs:
     if: failure()
     runs-on: ubuntu-latest
     steps:
-      - run: ls -l -a .
+      - run: ls --tree
   gitter-success:
     needs: test
     if: success()
