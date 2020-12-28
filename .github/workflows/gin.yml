@@ -61,7 +61,7 @@ jobs:
     steps:
 #    - run: curl -d message="GitHub Actions [$GITHUB_REPOSITORY]($GITHUB_API_URL/$GITHUB_REPOSITORY) ($GITHUB_REF) [still failing]($GITHUB_API_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID) ($GITHUB_RUN_NUMBER)" -d level=error https://webhooks.gitter.im/e/0d218e23e366f63de920
       - run: |
-          echo ${{github.event}}
+          cat $GITHUB_EVENT_PATH
 
   gitter-success:
     needs: test
