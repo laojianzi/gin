@@ -56,12 +56,16 @@ jobs:
   gitter-failure:
     needs: test
     if: failure()
+    env:
+      MESSAGE: 'GitHub Actions [${{ github.repository }}] (${{ github.ref }}) [still failing](${{ github.event_path }}) (github.run_number)'
     runs-on: ubuntu-latest
     steps:
-    - run: curl -d message=oops -d level=error https://webhooks.gitter.im/e/0d218e23e366f63de920
+    - run: curl -d message=$MESSAGE -d level=error https://webhooks.gitter.im/e/0d218e23e366f63de920
   gitter-success:
     needs: test
     if: success()
+    env:
+      MESSAGE: 'GitHub Actions [${{ github.repository }}] (${{ github.ref }}) [normal](${{ github.event_path }}) (github.run_number)'
     runs-on: ubuntu-latest
     steps:
-      - run: curl -d message=oops -d https://webhooks.gitter.im/e/0d218e23e366f63de920
+      - run: curl -d message=$MESSAGE -d https://webhooks.gitter.im/e/0d218e23e366f63de920
