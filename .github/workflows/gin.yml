@@ -12,9 +12,9 @@ jobs:
   test:
     strategy:
       matrix:
-        os: [ubuntu-latest]
-        go: [1.15]
-        test-tags: ['']
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        go: [1.12, 1.13, 1.14, 1.15]
+        test-tags: ['', nomsgpack]
     name: ${{ matrix.os }} @ Go ${{ matrix.go }} ${{ matrix.test-tags }}
     runs-on: ${{ matrix.os }}
     env:
