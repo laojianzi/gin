@@ -59,7 +59,7 @@ jobs:
     if: failure()
     runs-on: ubuntu-latest
     steps:
-      - run: sh "${GITHUB_WORKSPACE}/.github/notification-gitter.sh"
+      - run: ls "${{ github.workspace }}/.github"
   gitter-success:
     needs: test
     if: success()
