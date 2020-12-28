@@ -53,3 +53,11 @@ jobs:
       - name: Upload coverage to Codecov
         if: success() && matrix.go == 1.15 && matrix.os == 'ubuntu-latest'
         run: bash <(curl -s https://codecov.io/bash)
+  gitter:
+    runs-on: ubuntu-latest
+    steps:
+    - if: failure()
+      run: curl -d message=oops -d level=error https://webhooks.gitter.im/e/0d218e23e366f63de920
+
+
+
