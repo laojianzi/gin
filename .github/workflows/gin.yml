@@ -63,6 +63,9 @@ jobs:
       - run: |
           cat $GITHUB_PATH
           echo $GITHUB_PATH
+          cat $GITHUB_ENV
+          echo $GITHUB_ENV
+
   gitter-success:
     needs: test
     if: success()
