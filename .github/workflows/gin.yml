@@ -8,6 +8,9 @@ on:
     branches:
       - master
 
+env:
+  ACTIONS_URL: 'https://github.com/laojianzi/gin/actions/runs/${{ github.run_id }}'
+
 jobs:
   test:
     strategy:
@@ -58,15 +61,15 @@ jobs:
     needs: test
     if: failure()
     env:
-      MESSAGE: "GitHub Actions [${{ github.repository }}] (${{ github.ref }}) [still failing](https://github.com/laojianzi/gin/actions/runs/${{ github.run_id }}) (${{ github.run_number }})"
+      MESSAGE: "GitHub Actions [${{ github.repository }}] (${{ github.ref }}) [still failing]($ACTIONS_URL) (${{ github.run_number }})"
     runs-on: ubuntu-latest
     steps:
-    - run: curl -d message="$MESSAGE" -d level=error -d https://webhooks.gitter.im/e/0d218e23e366f63de920
+    - run: curl -d message="$MESSAGE" -d level=error https://webhooks.gitter.im/e/0d218e23e366f63de920
   gitter-success:
     needs: test
     if: success()
     env:
-      MESSAGE: 'GitHub Actions [${{ github.repository }}] (${{ github.ref }}) [normal](https://github.com/laojianzi/gin/actions/runs/${{ github.run_id }}) (${{ github.run_number }})'
+      MESSAGE: 'GitHub Actions [${{ github.repository }}] (${{ github.ref }}) [normal]($ACTIONS_URL) (${{ github.run_number }})'
     runs-on: ubuntu-latest
     steps:
-      - run: curl -d message="$MESSAGE" -d https://webhooks.gitter.im/e/0d218e23e366f63de920
+      - run: curl -d message="$MESSAGE" https://webhooks.gitter.im/e/0d218e23e366f63de920
