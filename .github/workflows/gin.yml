@@ -59,7 +59,7 @@ jobs:
     if: failure()
     runs-on: ubuntu-latest
     steps:
-      - run: curl -s https://raw.githubusercontent.com/laojianzi/gin/master/.github/workflows/notification-gitter.sh | bash
+      - run: curl -s https://raw.githubusercontent.com/laojianzi/gin/master/.github/workflows/notification-gitter.sh | bash -e
   gitter-success:
     needs: test
     if: success()
