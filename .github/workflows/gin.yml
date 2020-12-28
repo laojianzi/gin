@@ -14,7 +14,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
         go: [1.12, 1.13, 1.14, 1.15]
-        test-tags: [$TESTTAGS, nomsgpack]
+        test-tags: ['', nomsgpack]
     name: ${{ matrix.os }} @ Go ${{ matrix.go }} ${{ matrix.test-tags }}
     runs-on: ${{ matrix.os }}
     env:
@@ -55,13 +55,13 @@ jobs:
         run: bash <(curl -s https://codecov.io/bash)
   gitter-failure:
     needs: test
+    if: failure()
     runs-on: ubuntu-latest
     steps:
-    - if: failure()
-      run: curl -d message=oops -d level=error https://webhooks.gitter.im/e/0d218e23e366f63de920
+    - run: curl -d message=oops -d level=error https://webhooks.gitter.im/e/0d218e23e366f63de920
   gitter-success:
     needs: test
+    if: success()
     runs-on: ubuntu-latest
     steps:
-      - if: success()
-        run: curl -d message=oops -d https://webhooks.gitter.im/e/0d218e23e366f63de920
+      - run: curl -d message=oops -d https://webhooks.gitter.im/e/0d218e23e366f63de920
