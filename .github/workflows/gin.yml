@@ -23,18 +23,12 @@ jobs:
       GOPROXY: https://proxy.golang.org
     steps:
       - name: Set up Go ${{ matrix.go }}
-        uses: actions/setup-go@v1
+        uses: actions/setup-go@v2
         with:
           go-version: ${{ matrix.go }}
 
-      - name: Set GOPATH and PATH
-        run: |
-          echo "GOPATH=$(dirname $GITHUB_WORKSPACE)" >> $GITHUB_ENV
-          echo "$(dirname $GITHUB_WORKSPACE)/bin" >> $GITHUB_PATH
-        shell: bash
-
       - name: Checkout Code
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
         with:
           ref: ${{ github.ref }}
 
@@ -53,19 +47,26 @@ jobs:
       - name: Upload coverage to Codecov
         if: success() && matrix.go == 1.15 && matrix.os == 'ubuntu-latest'
         run: bash <(curl -s https://codecov.io/bash)
-  notification-gitter-failure:
+  notification-gitter:
     needs: test
-    if: failure()
     runs-on: ubuntu-latest
     steps:
-      - run: |
+      - name: Notification failure message
+        if: failure()
+        run: |
           PR_OR_COMPARE="$(if [ "${{ github.event.pull_request }}" != "" ]; then echo "${{ github.event.pull_request.html_url }}"; else echo "${{ github.event.compare }}"; fi)"
           curl -d message="GitHub Actions [$GITHUB_REPOSITORY]($PR_OR_COMPARE) ($GITHUB_REF) [normal]($GITHUB_API_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID) ($GITHUB_RUN_NUMBER)" -d level=error https://webhooks.gitter.im/e/0d218e23e366f63de920
-  notification-gitter-success:
-    needs: test
-    if: success()
-    runs-on: ubuntu-latest
-    steps:
-      - run: |
+      - name: Notification success message
+        if: success()
+        run: |
           PR_OR_COMPARE="$(if [ "${{ github.event.pull_request }}" != "" ]; then echo "${{ github.event.pull_request.html_url }}"; else echo "${{ github.event.compare }}"; fi)"
           curl -d message="GitHub Actions [$GITHUB_REPOSITORY]($PR_OR_COMPARE) ($GITHUB_REF) [normal]($GITHUB_API_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID) ($GITHUB_RUN_NUMBER)" https://webhooks.gitter.im/e/0d218e23e366f63de920
+
+#  notification-gitter-success:
+#    needs: test
+#    if: success()
+#    runs-on: ubuntu-latest
+#    steps:
+#      - run: |
+#          PR_OR_COMPARE="$(if [ "${{ github.event.pull_request }}" != "" ]; then echo "${{ github.event.pull_request.html_url }}"; else echo "${{ github.event.compare }}"; fi)"
+#          curl -d message="GitHub Actions [$GITHUB_REPOSITORY]($PR_OR_COMPARE) ($GITHUB_REF) [normal]($GITHUB_API_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID) ($GITHUB_RUN_NUMBER)" https://webhooks.gitter.im/e/0d218e23e366f63de920
