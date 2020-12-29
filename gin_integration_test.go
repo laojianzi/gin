@@ -14,7 +14,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
-	"runtime"
+	"path/filepath"
 	"sync"
 	"testing"
 	"time"
@@ -145,15 +145,9 @@ func TestRunWithPort(t *testing.T) {
 }
 
 func TestUnixSocket(t *testing.T) {
-	// "connect: A socket operation encountered a dead network."
-	// skip on windows
-	if runtime.GOOS == "windows" {
-		t.SkipNow()
-	}
-
 	router := New()
 
-	unixTestSocket := "/tmp/unix_unit_test"
+	unixTestSocket := filepath.Join(os.TempDir(), "unix_unit_test")
 
 	defer os.Remove(unixTestSocket)
 
